@@ -30,14 +30,14 @@ tasks.jar {
     archiveFileName.set("${rootProject.name}-${project.version}.jar")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-    // 🔥 dependências (shade)
+    // dependencies (shade)
     from({
         configurations.runtimeClasspath.get()
             .filter { it.name.endsWith(".jar") }
             .map { zipTree(it) }
     })
 
-    // 🔥 GARANTE QUE OS MODULES ENTREM
+    // Ensures that the modules enter.
     from("src/main/resources") {
         include("modules/**")
     }

@@ -79,7 +79,7 @@ tasks.register("createModule") {
         kotlinDir.mkdirs()
         resourceDir.mkdirs()
 
-        // build.gradle.kts do módulo
+        // module build.gradle.kts
         File(baseDir, "build.gradle.kts").writeText("""
             plugins {
                 kotlin("jvm")
@@ -120,8 +120,8 @@ tasks.register("createModule") {
             }
         """.trimIndent())
 
-        // Classe do módulo
-        File(kotlinDir, "${moduleName}Module.kt").writeText("""
+        // Module class
+            File(kotlinDir, "${moduleName}Module.kt").writeText("""
             package net.lazz.modules.$pkg
 
             import net.lazz.core.service.module.AbstractModule
@@ -144,11 +144,11 @@ tasks.register("createModule") {
                     plugin.logger.info("[${moduleName}] Módulo desativado")
                 }
             }
-        """.trimIndent())
+            """.trimIndent())
 
-        // ================= COMMAND 1 (SIMPLES) =================
+        // ================= COMMAND 1 (simple) =================
 
-                File(kotlinDir, "${moduleName}SimpleCommand.kt").writeText("""
+            File(kotlinDir, "${moduleName}SimpleCommand.kt").writeText("""
             package net.lazz.modules.$pkg
         
             import net.lazz.core.command.annotation.CommandInfo
@@ -179,11 +179,11 @@ tasks.register("createModule") {
                     return true
                 }
             }
-        """.trimIndent())
+            """.trimIndent())
 
-        // ================= COMMAND 2 (COM SERVICE) =================
+        // ================= COMMAND 2 (with service) =================
 
-                File(kotlinDir, "${moduleName}Command.kt").writeText("""
+            File(kotlinDir, "${moduleName}Command.kt").writeText("""
             package net.lazz.modules.$pkg
         
             import net.lazz.core.command.annotation.CommandInfo
@@ -220,11 +220,11 @@ tasks.register("createModule") {
                     return true
                 }
             }
-        """.trimIndent())
+            """.trimIndent())
 
         // ================= SERVICE =================
 
-        File(kotlinDir, "${moduleName}Service.kt").writeText("""
+            File(kotlinDir, "${moduleName}Service.kt").writeText("""
             package net.lazz.modules.$pkg
         
             import net.lazz.core.service.dependency.annotation.Service
@@ -252,11 +252,11 @@ tasks.register("createModule") {
                     return "Service funcionando!"
                 }
             }
-        """.trimIndent())
+            """.trimIndent())
 
         // ================= LISTENER =================
 
-                File(kotlinDir, "${moduleName}Listener.kt").writeText("""
+            File(kotlinDir, "${moduleName}Listener.kt").writeText("""
             package net.lazz.modules.$pkg
         
             import net.lazz.core.listener.annotation.AutoListener
@@ -272,17 +272,17 @@ tasks.register("createModule") {
                     event.player.sendMessage("§e[$moduleName] Bem-vindo!")
                 }
             }
-        """.trimIndent())
+            """.trimIndent())
 
         // YAML
-        File(resourceDir, "module-$pkg.yml").writeText("""
+            File(resourceDir, "module-$pkg.yml").writeText("""
             id: $pkg
             name: $moduleName
             main: net.lazz.modules.$pkg.${moduleName}Module
             package: net.lazz.modules.$pkg
             version: "1.0"
             depends: []
-        """.trimIndent())
+            """.trimIndent())
 
         println("module-$pkg.yml criado")
         println("Módulo criado com sucesso: $pkg")

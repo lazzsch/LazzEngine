@@ -1,8 +1,8 @@
-rootProject.name = "LazzPlugins"
+rootProject.name = "LazzEngine"
 
 include(":core")
 
-// 🔥 auto-detecta módulos dentro de /modules
+// auto-detect modules within /modules
 file("modules").listFiles()
     ?.filter { it.isDirectory }
     ?.forEach { dir ->
