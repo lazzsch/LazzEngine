@@ -1,0 +1,6 @@
+id: money
+name: Money
+main: net.lazz.modules.money.MoneyModule
+package: net.lazz.modules.money
+version: 1.0
+depends: []
