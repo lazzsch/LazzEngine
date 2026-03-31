@@ -29,14 +29,14 @@ object Helper {
 
     fun run(project: Project) {
 
-        println("\n🚀 LazzEngine Helper\n")
+        println("\n[LazzEngine Helper]\n")
 
-        val choice = choose("Selecione uma opção:", listOf(
+        val choice = choose("Selecione uma opcao:", listOf(
             "Commit (Git)",
-            "Versionamento (Bump)",
-            "Gerar Changelog",
-            "Criar Release",
-            "Criar módulo",
+            "Version (Bump)",
+            "Changelog",
+            "Release",
+            "Criar modulo",
             "Build completo"
         ))
 
@@ -51,18 +51,18 @@ object Helper {
         }
 
         if (nextTask == null) {
-            println("❌ Opção inválida")
+            println("Opcao invalida")
             return
         }
 
         val task = project.tasks.findByName(nextTask)
 
         if (task == null) {
-            println("❌ Task não encontrada: $nextTask")
+            println("Task nao encontrada: $nextTask")
             return
         }
 
-        println("\n➡ Executando: $nextTask\n")
+        println("\n-> Executando: $nextTask\n")
 
         task.actions.forEach { it.execute(task) }
     }
@@ -72,14 +72,14 @@ object Helper {
     fun commit() {
 
         val options = listOf(
-            "feat     → nova funcionalidade (ex: adiciona sistema de login)",
-            "fix      → correção de bug (ex: corrige erro ao carregar módulos)",
-            "refactor → melhoria interna (ex: refatora ModuleManager)",
-            "perf     → melhoria de performance (ex: otimiza carregamento)",
-            "docs     → documentação (ex: atualiza README)",
-            "style    → formatação (ex: identação, lint)",
-            "test     → testes (ex: adiciona testes)",
-            "chore    → tarefas internas (ex: update deps)"
+            "feat     -> nova funcionalidade (ex: adiciona sistema de login)",
+            "fix      -> correcao de bug (ex: corrige erro ao carregar modulos)",
+            "refactor -> melhoria interna (ex: refatora ModuleManager)",
+            "perf     -> melhoria de performance (ex: otimiza carregamento)",
+            "docs     -> documentacao (ex: atualiza README)",
+            "style    -> formatacao (ex: identacao, lint)",
+            "test     -> testes (ex: adiciona testes)",
+            "chore    -> tarefas internas (ex: update deps)"
         )
 
         val index = choose("Tipo de commit:", options)
@@ -90,24 +90,24 @@ object Helper {
             ?.first()
             ?: return
 
-        println("\n💡 Escopo = onde você mexeu (ex: core, module, command)")
+        println("\nEscopo = onde voce mexeu (ex: core, module, command)")
         val scope = ask("Escopo (opcional): ")
 
-        val desc = ask("Descrição: ")
+        val desc = ask("Descricao: ")
 
-        if (desc.isBlank()) error("❌ Descrição obrigatória")
+        if (desc.isBlank()) error("Descricao obrigatoria")
 
         println("""
         
-⚠️ Breaking Change (quebra compatibilidade)?
+Breaking change (quebra compatibilidade)?
 Exemplos:
-- Mudou API → SIM
-- Removeu método → SIM
-- Só corrigiu bug → NÃO
+- mudou API -> SIM
+- removeu metodo -> SIM
+- so corrigiu bug -> NAO
         
         """.trimIndent())
 
-        val breaking = ask("É breaking change? (s/n): ").lowercase() == "s"
+        val breaking = ask("Breaking change? (s/n): ").lowercase() == "s"
 
         val msg = buildString {
             append(type)
@@ -116,11 +116,11 @@ Exemplos:
             append(": $desc")
         }
 
-        println("\n📦 Commit gerado:\n$msg")
+        println("\nCommit gerado:\n$msg")
         println("\nConfirmar? (s/n)")
 
         if (readLine()?.lowercase() != "s") {
-            println("❌ Commit cancelado")
+            println("Commit cancelado")
             return
         }
 
@@ -128,7 +128,7 @@ Exemplos:
         ProcessBuilder("git", "commit", "-m", msg).inheritIO().start().waitFor()
         ProcessBuilder("git", "push").inheritIO().start().waitFor()
 
-        println("✅ Commit enviado com sucesso!")
+        println("Commit enviado com sucesso")
     }
 
     // ================= VERSION =================
@@ -141,20 +141,20 @@ Exemplos:
 
         val (maj, min, pat) = file.readText().split(".").map { it.toInt() }
 
-        println("\n📌 Versão atual: $maj.$min.$pat")
+        println("\nVersao atual: $maj.$min.$pat")
 
-        val type = ask("Tipo de incremento (major/minor/patch): ")
+        val type = ask("Tipo (major/minor/patch): ")
 
         val newVersion = when (type) {
             "major" -> "${maj + 1}.0.0"
             "minor" -> "$maj.${min + 1}.0"
             "patch" -> "$maj.$min.${pat + 1}"
-            else -> error("❌ Tipo inválido")
+            else -> error("Tipo invalido")
         }
 
         file.writeText(newVersion)
 
-        println("✅ Nova versão: $newVersion")
+        println("Nova versao: $newVersion")
     }
 
     // ================= CHANGELOG =================
@@ -179,7 +179,7 @@ Exemplos:
             append("\n")
         })
 
-        println("📜 CHANGELOG atualizado")
+        println("Changelog atualizado")
     }
 
     // ================= RELEASE =================
@@ -188,7 +188,7 @@ Exemplos:
 
         val version = File(project.rootDir, "version.txt").readText().trim()
 
-        println("\n🚀 Criando release v$version...\n")
+        println("\nCriando release v$version...\n")
 
         ProcessBuilder("git", "add", ".").inheritIO().start().waitFor()
         ProcessBuilder("git", "commit", "-m", "chore(release): v$version").inheritIO().start().waitFor()
@@ -197,34 +197,34 @@ Exemplos:
         ProcessBuilder("git", "tag", "v$version").inheritIO().start().waitFor()
         ProcessBuilder("git", "push", "origin", "v$version").inheritIO().start().waitFor()
 
-        println("✅ Release concluído com sucesso!")
+        println("Release concluido com sucesso")
     }
 
     // ================= CREATE MODULE =================
 
     fun createModule(project: Project) {
 
-        val name = ask("Nome do módulo: ")
+        val name = ask("Nome do modulo: ")
 
         if (name.isBlank()) {
-            println("❌ Nome inválido")
+            println("Nome invalido")
             return
         }
 
-        println("\n📦 Criando módulo...\n")
+        println("\nCriando modulo...\n")
 
         project.extensions.extraProperties.set("module", name)
 
         val task = project.tasks.getByName("createModule")
         task.actions.forEach { it.execute(task) }
 
-        println("\n✅ Módulo criado com sucesso!")
+        println("\nModulo criado com sucesso")
 
         println("""
         
-⚠️ Para o Gradle reconhecer o novo módulo:
-👉 Execute: gradlew build
-👉 Ou clique em "Reload Gradle" no IntelliJ
+Para o Gradle reconhecer o novo modulo:
+- Execute: gradlew build
+- Ou clique em Reload Gradle no IntelliJ
         
         """.trimIndent())
     }
