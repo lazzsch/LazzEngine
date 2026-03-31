@@ -104,7 +104,7 @@ object Helper {
         - mudou API -> SIM
         - removeu metodo -> SIM
         - so corrigiu bug -> NAO
-                
+        
         """.trimIndent())
 
         val breaking = ask("Breaking change? (s/n): ").lowercase() == "s"
@@ -127,17 +127,22 @@ object Helper {
         val projectDir = File(".")
         val versionFile = File(projectDir, "version.txt")
 
-        if (!versionFile.exists()) versionFile.writeText("0.0.0")
-
-        val (maj, min, pat) = versionFile.readText().split(".").map { it.toInt() }
-
-        // 🔥 VERSIONAMENTO AUTOMATICO
-        val newVersion = when {
-            breaking -> "${maj + 1}.0.0"
-            type == "feat" -> "$maj.${min + 1}.0"
-            type == "fix" -> "$maj.$min.${pat + 1}"
-            else -> "$maj.$min.${pat + 1}"
+        // 🔥 GARANTE EXISTENCIA
+        if (!versionFile.exists()) {
+            versionFile.writeText("1.0.0")
         }
+
+        val parts = versionFile.readText().trim().split(".")
+        if (parts.size != 3) {
+            error("Versao invalida no version.txt (use formato x.y.z)")
+        }
+
+        val maj = parts[0].toInt()
+        val min = parts[1].toInt()
+        val pat = parts[2].toInt()
+
+        // 🔥 SEMPRE PATCH +1
+        val newVersion = "$maj.$min.${pat + 1}"
 
         versionFile.writeText(newVersion)
 
@@ -158,14 +163,12 @@ object Helper {
         } else {
             val existing = changelogFile.readText()
 
-            if (!existing.contains(entry)) {
-                changelogFile.writeText(
-                    existing.replaceFirst(
-                        "# Changelog\n\n",
-                        "# Changelog\n\n$newContent"
-                    )
+            changelogFile.writeText(
+                existing.replaceFirst(
+                    "# Changelog\n\n",
+                    "# Changelog\n\n$newContent"
                 )
-            }
+            )
         }
 
         println("Changelog atualizado")
