@@ -99,13 +99,13 @@ object Helper {
 
         println("""
     
-        Breaking change (quebra compatibilidade)?
-        Exemplos:
-        - mudou API -> SIM
-        - removeu metodo -> SIM
-        - so corrigiu bug -> NAO
+Breaking change (quebra compatibilidade)?
+Exemplos:
+- mudou API -> SIM
+- removeu metodo -> SIM
+- so corrigiu bug -> NAO
         
-        """.trimIndent())
+    """.trimIndent())
 
         val breaking = ask("Breaking change? (s/n): ").lowercase() == "s"
 
@@ -127,7 +127,7 @@ object Helper {
         val projectDir = File(".")
         val versionFile = File(projectDir, "version.txt")
 
-        // 🔥 GARANTE EXISTENCIA
+        // garante arquivo
         if (!versionFile.exists()) {
             versionFile.writeText("1.0.0")
         }
@@ -141,37 +141,44 @@ object Helper {
         val min = parts[1].toInt()
         val pat = parts[2].toInt()
 
-        // 🔥 SEMPRE PATCH +1
+        // 🔥 incrementa apenas PATCH
         val newVersion = "$maj.$min.${pat + 1}"
-
         versionFile.writeText(newVersion)
 
         println("Nova versao: $newVersion")
 
+        // ================= CHANGELOG =================
+
         val changelogFile = File(projectDir, "CHANGELOG.md")
-
         val entry = "- $msg\n"
-
-        val newContent = buildString {
-            append("## v$newVersion\n")
-            append(entry)
-            append("\n")
-        }
+        val header = "# Changelog\n\n"
+        val versionHeader = "## v$newVersion"
 
         if (!changelogFile.exists()) {
-            changelogFile.writeText("# Changelog\n\n$newContent")
+            changelogFile.writeText(header + "$versionHeader\n$entry\n")
         } else {
-            val existing = changelogFile.readText()
+            val content = changelogFile.readText()
 
-            changelogFile.writeText(
-                existing.replaceFirst(
-                    "# Changelog\n\n",
-                    "# Changelog\n\n$newContent"
+            val updated = if (content.contains(versionHeader)) {
+                // adiciona dentro da versao existente
+                content.replaceFirst(
+                    versionHeader,
+                    "$versionHeader\n$entry"
                 )
-            )
+            } else {
+                // cria nova versao no topo
+                content.replaceFirst(
+                    header,
+                    header + "$versionHeader\n$entry\n"
+                )
+            }
+
+            changelogFile.writeText(updated)
         }
 
         println("Changelog atualizado")
+
+        // ================= GIT =================
 
         ProcessBuilder("git", "add", ".").inheritIO().start().waitFor()
         ProcessBuilder("git", "commit", "-m", msg).inheritIO().start().waitFor()
