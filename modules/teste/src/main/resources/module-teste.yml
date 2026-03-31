@@ -1,0 +1,6 @@
+id: teste
+name: Teste
+main: net.lazz.modules.teste.TesteModule
+package: net.lazz.modules.teste
+version: "1.0"
+depends: []

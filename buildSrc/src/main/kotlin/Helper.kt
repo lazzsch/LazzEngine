@@ -31,7 +31,7 @@ object Helper {
 
         println("\nLazzEngine Helper\n")
 
-        val choice = choose("Escolha:", listOf(
+        val choice = choose("Options:", listOf(
             "Commit",
             "Version (Bump)",
             "Changelog",
@@ -51,7 +51,7 @@ object Helper {
         }
 
         if (nextTask == null) {
-            println("Opção inválida")
+            println("Opcao invalida")
             return
         }
 
@@ -71,20 +71,39 @@ object Helper {
 
     fun commit() {
 
-        val types = listOf(
-            "feat", "fix", "refactor", "perf",
-            "docs", "style", "test", "chore"
+        val options = listOf(
+            "feat     -> nova funcionalidade (ex: adiciona sistema de login)",
+            "fix      -> correção de bug (ex: corrige erro ao carregar módulos)",
+            "refactor -> melhoria interna sem mudar comportamento (ex: limpa código do ModuleManager)",
+            "perf     -> melhoria de performance (ex: otimiza carregamento de módulos)",
+            "docs     -> documentação (ex: atualiza README)",
+            "style    -> formatação/código (ex: ajusta indentação, remove warnings)",
+            "test     -> testes (ex: adiciona testes do sistema de módulos)",
+            "chore    -> tarefas internas (ex: atualiza dependências)"
         )
 
-        val index = choose("Tipo de commit:", types)
-        val type = types.getOrNull(index - 1) ?: return
+        val index = choose("Tipo de commit:", options)
+
+        val type = options
+            .getOrNull(index - 1)
+            ?.split(" ")
+            ?.first()
+            ?: return
 
         val scope = ask("Escopo (opcional): ")
         val desc = ask("Descricao: ")
 
         if (desc.isBlank()) error("Descricao obrigatoria")
 
-        val breaking = ask("Breaking change? (s/n): ").lowercase() == "s"
+        println("""
+        Essa mudança quebra compatibilidade?
+        Exemplos:
+        - mudou API → S
+        - removeu método → S
+        - só corrigiu bug → N
+        """.trimIndent())
+
+        val breaking = ask("Essa mudança quebra compatibilidade? (s/n): ").lowercase() == "s"
 
         val msg = buildString {
             append(type)
