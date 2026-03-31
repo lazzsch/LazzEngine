@@ -127,7 +127,6 @@ Exemplos:
         val projectDir = File(".")
         val versionFile = File(projectDir, "version.txt")
 
-        // garante arquivo
         if (!versionFile.exists()) {
             versionFile.writeText("1.0.0")
         }
@@ -141,7 +140,7 @@ Exemplos:
         val min = parts[1].toInt()
         val pat = parts[2].toInt()
 
-        // 🔥 incrementa apenas PATCH
+        // 🔥 PATCH +1
         val newVersion = "$maj.$min.${pat + 1}"
         versionFile.writeText(newVersion)
 
@@ -150,33 +149,42 @@ Exemplos:
         // ================= CHANGELOG =================
 
         val changelogFile = File(projectDir, "CHANGELOG.md")
-        val entry = "- $msg\n"
-        val header = "# Changelog\n\n"
+        val entry = "- $msg"
         val versionHeader = "## v$newVersion"
 
         if (!changelogFile.exists()) {
-            changelogFile.writeText(header + "$versionHeader\n$entry\n")
+            changelogFile.writeText("# Changelog\n\n$versionHeader\n$entry\n")
         } else {
-            val content = changelogFile.readText()
+            val lines = changelogFile.readLines().toMutableList()
 
-            val updated = if (content.contains(versionHeader)) {
+            val indexVersion = lines.indexOfFirst { it.trim() == versionHeader }
+
+            if (indexVersion != -1) {
                 // adiciona dentro da versao existente
-                content.replaceFirst(
-                    versionHeader,
-                    "$versionHeader\n$entry"
-                )
+                lines.add(indexVersion + 1, entry)
             } else {
                 // cria nova versao no topo
-                content.replaceFirst(
-                    header,
-                    header + "$versionHeader\n$entry\n"
-                )
+                val newLines = mutableListOf<String>()
+                newLines.add("# Changelog")
+                newLines.add("")
+                newLines.add(versionHeader)
+                newLines.add(entry)
+                newLines.add("")
+
+                val remaining = lines.dropWhile { it.startsWith("# Changelog") }.drop(1)
+                newLines.addAll(remaining)
+
+                lines.clear()
+                lines.addAll(newLines)
             }
 
-            changelogFile.writeText(updated)
+            changelogFile.writeText(lines.joinToString("\n"))
         }
 
         println("Changelog atualizado")
+
+        // 🔥 garante que o sistema salvou o arquivo
+        Thread.sleep(50)
 
         // ================= GIT =================
 
