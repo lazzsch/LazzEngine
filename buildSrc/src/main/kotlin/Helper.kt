@@ -98,13 +98,13 @@ object Helper {
         if (desc.isBlank()) error("Descricao obrigatoria")
 
         println("""
-        
-Breaking change (quebra compatibilidade)?
-Exemplos:
-- mudou API -> SIM
-- removeu metodo -> SIM
-- so corrigiu bug -> NAO
-        
+    
+        Breaking change (quebra compatibilidade)?
+        Exemplos:
+        - mudou API -> SIM
+        - removeu metodo -> SIM
+        - so corrigiu bug -> NAO
+            
         """.trimIndent())
 
         val breaking = ask("Breaking change? (s/n): ").lowercase() == "s"
@@ -123,6 +123,40 @@ Exemplos:
             println("Commit cancelado")
             return
         }
+
+        val projectDir = File(".")
+        val versionFile = File(projectDir, "version.txt")
+
+        val version = versionFile.takeIf { it.exists() }
+            ?.readText()?.trim() ?: "0.0.0"
+
+        val changelogFile = File(projectDir, "CHANGELOG.md")
+
+        // 🔥 Atualiza changelog ANTES do commit
+        val entry = "- $msg\n"
+
+        val newContent = buildString {
+            append("## v$version\n")
+            append(entry)
+            append("\n")
+        }
+
+        if (!changelogFile.exists()) {
+            changelogFile.writeText("# Changelog\n\n$newContent")
+        } else {
+            val existing = changelogFile.readText()
+
+            if (!existing.contains(entry)) {
+                changelogFile.writeText(
+                    existing.replaceFirst(
+                        "# Changelog\n\n",
+                        "# Changelog\n\n$newContent"
+                    )
+                )
+            }
+        }
+
+        println("Changelog atualizado")
 
         ProcessBuilder("git", "add", ".").inheritIO().start().waitFor()
         ProcessBuilder("git", "commit", "-m", msg).inheritIO().start().waitFor()
