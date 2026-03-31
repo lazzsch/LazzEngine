@@ -6,8 +6,12 @@ build/
 .idea/
 *.iml
 
-# Logs
-logs/
+# Kotlin
+.kotlin/
 
-# Minecraft
-run/
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

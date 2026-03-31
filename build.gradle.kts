@@ -68,10 +68,10 @@ tasks.register("createModule") {
         val baseDir = file("modules/$pkg")
 
         if (baseDir.exists()) {
-            throw GradleException("Módulo já existe: $pkg")
+            throw GradleException("Modulo ja existe: $pkg")
         }
 
-        println("Criando módulo: $moduleName")
+        println("Criando modulo: $moduleName")
 
         val kotlinDir = File(baseDir, "src/main/kotlin/net/lazz/modules/$pkg")
         val resourceDir = File(baseDir, "src/main/resources")
@@ -285,8 +285,40 @@ tasks.register("createModule") {
             """.trimIndent())
 
         println("module-$pkg.yml criado")
-        println("Módulo criado com sucesso: $pkg")
+        println("Modulo criado com sucesso: $pkg")
     }
+}
+
+// ================= HELPER =================
+
+tasks.register("helper") {
+    doLast { Helper.run(project) }
+}
+
+// ================= WRAPPERS =================
+
+tasks.register("commitTask") {
+    doLast { Helper.commit() }
+}
+
+tasks.register("versionTask") {
+    doLast { Helper.version(project) }
+}
+
+tasks.register("changelogTask") {
+    doLast { Helper.changelog(project) }
+}
+
+tasks.register("releaseTask") {
+    doLast { Helper.release(project) }
+}
+
+tasks.register("createModuleTask") {
+    doLast { Helper.createModule(project) }
+}
+
+tasks.register("buildTask") {
+    dependsOn("fullBuild")
 }
 
 // ================= BUILD COMPLETO =================
