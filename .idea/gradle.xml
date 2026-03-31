@@ -23,6 +23,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/modules" />
             <option value="$PROJECT_DIR$/modules/money" />
+            <option value="$PROJECT_DIR$/modules/teste" />
             <option value="$PROJECT_DIR$/modules/testing" />
           </set>
         </option>

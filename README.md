@@ -36,7 +36,7 @@ Modules (.jar)
 
 ## ⚙️ Installation
 
-1. Download or build the project:
+1. Build the project:
 
 ```bash
 ./gradlew fullBuild
@@ -55,6 +55,8 @@ Modules are loaded from:
 ```
 /plugins/LazzEngine/modules/
 ```
+
+> ⚡ Modules are automatically detected during build via `settings.gradle.kts`.
 
 Each module must be a `.jar` file.
 
@@ -77,10 +79,16 @@ depends: []
 
 ## 🧩 Creating a Module
 
-You can generate a module using:
+Manual:
 
 ```bash
 ./gradlew createModule -Pm=money
+```
+
+Or via helper (recommended):
+
+```bash
+./gradlew helper
 ```
 
 ---
@@ -150,12 +158,98 @@ class MoneyService {
 
 ---
 
+## 🧰 Helper CLI (Developer Tooling)
+
+The project includes an interactive CLI to automate development tasks:
+
+```bash
+./gradlew helper
+```
+
+---
+
+### 📋 Available Options
+
+```
+1. Commit (Git)
+2. Version (Bump)
+3. Generate Changelog
+4. Create Release
+5. Create Module
+6. Full Build
+```
+
+---
+
+### ✨ Commit Assistant (Conventional Commits)
+
+The helper guides you through creating standardized commits:
+
+| Type     | Description             |
+| -------- | ----------------------- |
+| feat     | New feature             |
+| fix      | Bug fix                 |
+| refactor | Internal improvement    |
+| perf     | Performance improvement |
+| docs     | Documentation           |
+| style    | Code formatting         |
+| test     | Tests                   |
+| chore    | Maintenance             |
+
+Example:
+
+```
+feat(module): add economy system
+fix(core): fix module unload bug
+```
+
+---
+
+### ⚠️ Breaking Changes
+
+If your change breaks compatibility, the helper marks it automatically:
+
+```
+feat(api)!: change module structure
+```
+
+---
+
+### 📦 Versioning (SemVer)
+
+The helper updates project version automatically:
+
+| Type  | Example       |
+| ----- | ------------- |
+| patch | 1.0.0 → 1.0.1 |
+| minor | 1.0.0 → 1.1.0 |
+| major | 1.0.0 → 2.0.0 |
+
+---
+
+### 📜 Changelog
+
+Automatically generates `CHANGELOG.md` based on commits.
+
+---
+
+### 🚀 Release
+
+Creates commit + tag:
+
+```bash
+git tag vX.X.X
+git push origin vX.X.X
+```
+
+---
+
 ## 🧪 Development
 
 Requirements:
 
 * Java 21
-* Gradle
+* Gradle (use wrapper: `./gradlew`)
 * Paper / Spigot 1.21+
 
 Run local test server:
@@ -170,10 +264,12 @@ Run local test server:
 
 * Multi-module Gradle project
 * Automatic module detection
-* Custom task for packaging modules into core
+* Module packaging into core
 
 ```bash
 ./gradlew fullBuild
+# or
+./gradlew helper
 ```
 
 ---
@@ -186,7 +282,7 @@ Minecraft plugin development often leads to:
 * ❌ Hard restarts for updates
 * ❌ Poor modularity
 
-**LazzEngine solves this by introducing a modular architecture with runtime control.**
+**LazzEngine solves this with a modular runtime architecture.**
 
 ---
 
@@ -206,7 +302,7 @@ Minecraft plugin development often leads to:
 Contributions are welcome!
 
 1. Fork the project
-2. Create your feature branch
+2. Create your branch
 3. Commit your changes
 4. Open a Pull Request
 
@@ -214,7 +310,7 @@ Contributions are welcome!
 
 ## 📄 License
 
-MIT License — feel free to use and modify.
+MIT License — free to use and modify.
 
 ---
 
