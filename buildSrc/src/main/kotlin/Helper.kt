@@ -104,7 +104,7 @@ object Helper {
         - mudou API -> SIM
         - removeu metodo -> SIM
         - so corrigiu bug -> NAO
-            
+                
         """.trimIndent())
 
         val breaking = ask("Breaking change? (s/n): ").lowercase() == "s"
@@ -127,16 +127,28 @@ object Helper {
         val projectDir = File(".")
         val versionFile = File(projectDir, "version.txt")
 
-        val version = versionFile.takeIf { it.exists() }
-            ?.readText()?.trim() ?: "0.0.0"
+        if (!versionFile.exists()) versionFile.writeText("0.0.0")
+
+        val (maj, min, pat) = versionFile.readText().split(".").map { it.toInt() }
+
+        // 🔥 VERSIONAMENTO AUTOMATICO
+        val newVersion = when {
+            breaking -> "${maj + 1}.0.0"
+            type == "feat" -> "$maj.${min + 1}.0"
+            type == "fix" -> "$maj.$min.${pat + 1}"
+            else -> "$maj.$min.${pat + 1}"
+        }
+
+        versionFile.writeText(newVersion)
+
+        println("Nova versao: $newVersion")
 
         val changelogFile = File(projectDir, "CHANGELOG.md")
 
-        // 🔥 Atualiza changelog ANTES do commit
         val entry = "- $msg\n"
 
         val newContent = buildString {
-            append("## v$version\n")
+            append("## v$newVersion\n")
             append(entry)
             append("\n")
         }
