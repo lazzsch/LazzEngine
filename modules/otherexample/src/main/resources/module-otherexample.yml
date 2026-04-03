@@ -1,0 +1,5 @@
+id: otherexample
+name: Otherexample
+main: net.lazz.modules.otherexample.OtherexampleModule
+package: net.lazz.modules.otherexample
+version: ${version}

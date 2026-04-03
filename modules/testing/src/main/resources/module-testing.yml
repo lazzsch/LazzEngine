@@ -1,6 +1,0 @@
-id: testing
-name: Testing
-main: net.lazz.modules.testing.TestingModule
-package: net.lazz.modules.testing
-version: "1.0"
-depends: []

@@ -1,10 +1,10 @@
-name: LazzPlugins
-version: '1.0-SNAPSHOT'
+name: LazzEngine
+version: ${version}
 main: net.lazz.core.Core
-api-version: '1.21'
+api-version: ${apiVersion}
 
 commands:
-  wm:
+  lm:
     description: Gerenciar módulos
-    usage: /wm
+    usage: /lm
     permission: module.admin

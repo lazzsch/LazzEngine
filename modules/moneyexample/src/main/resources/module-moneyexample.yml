@@ -1,0 +1,5 @@
+id: moneyexample
+name: Moneyexample
+main: net.lazz.modules.moneyexample.MoneyexampleModule
+package: net.lazz.modules.moneyexample
+version: ${version}

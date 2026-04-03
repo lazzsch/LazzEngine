@@ -1,0 +1,3 @@
+modules:
+  debug: false
+  verbose: true
